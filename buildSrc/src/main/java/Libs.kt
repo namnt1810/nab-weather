@@ -13,6 +13,9 @@ object Libs {
     const val CORE_KTX = "androidx.core:core-ktx"
     const val MATERIAL = "com.google.android.material:material"
 
+    const val ROOM = "androidx.room:room-runtime"
+    const val ROOM_COMPILER = "androidx.room:room-compiler"
+
     const val DAGGER = "com.google.dagger:dagger"
     const val DAGGER_ANDROID = "com.google.dagger:dagger-android-support"
     const val DAGGER_COMPILER = "com.google.dagger:dagger-compiler"
@@ -23,7 +26,13 @@ object Libs {
     const val LEAK_CANARY = "com.squareup.leakcanary:leakcanary-android"
 
     const val ANDROID_RUNNER = "androidx.test:runner"
+    const val ANDROID_RUNNER_EXT = "androidx.test.ext:junit"
     const val ESPRESSO_CORE = "androidx.test.espresso:espresso-core"
 
+    const val COROUTINE_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test"
     const val JUNIT = "junit:junit"
+    const val MOCKITO_CORE = "org.mockito:mockito-core"
+    const val MOCKITO_KOTLIN = "org.mockito.kotlin:mockito-kotlin"
+    const val MOCKITO_INLINE = "org.mockito:mockito-inline"
+    const val MOCK_WEB_SERVER = "com.squareup.okhttp3:mockwebserver"
 }

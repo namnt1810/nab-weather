@@ -4,6 +4,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("com.google.devtools.ksp") version "1.7.20-1.0.8"
 }
 
 android {
@@ -100,6 +101,9 @@ dependencies {
     implementation(Libs.MATERIAL)
     implementation(Libs.MULTI_DEX)
 
+    implementation(Libs.ROOM)
+    ksp(Libs.ROOM_COMPILER)
+
     // 3rd-party
     // Dagger
     implementation(Libs.DAGGER)
@@ -113,9 +117,15 @@ dependencies {
 //    debugImplementation(Libs.LEAK_CANARY)
 
     // Instrumentation tests
+    androidTestImplementation(Libs.COROUTINE_TEST)
     androidTestImplementation(Libs.ESPRESSO_CORE)
     androidTestImplementation(Libs.ANDROID_RUNNER)
+    androidTestImplementation(Libs.ANDROID_RUNNER_EXT)
 
     // Local unit tests
+    testImplementation(Libs.COROUTINE_TEST)
     testImplementation(Libs.JUNIT)
+    testImplementation(Libs.MOCKITO_CORE)
+    testImplementation(Libs.MOCKITO_KOTLIN)
+    testImplementation(Libs.MOCKITO_INLINE)
 }

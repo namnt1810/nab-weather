@@ -19,6 +19,7 @@ val mockito = "3.3.1"
 val mockitoKotlin = "1.5.0"
 val multidex = "2.0.1"
 val okhttp = "3.10.0"
+val room = "2.4.3"
 val runner = "1.2.0"
 
 dependencies {
@@ -39,6 +40,9 @@ dependencies {
         api("${Libs.MATERIAL}:$material")
         api("${Libs.MULTI_DEX}:$multidex")
 
+        api("${Libs.ROOM}:$room")
+        api("${Libs.ROOM_COMPILER}:$room")
+
         // 3rd-party
         api("${Libs.DAGGER}:$dagger")
         api("${Libs.DAGGER_ANDROID}:$dagger")
@@ -48,8 +52,14 @@ dependencies {
         api("${Libs.GSON}:$gson")
 
         // Test
-        api("${Libs.ESPRESSO_CORE}:$espresso")
-        api("${Libs.JUNIT}:$junit")
-        api("${Libs.ANDROID_RUNNER}:$runner")
+        api("${Libs.ESPRESSO_CORE}:3.1.1")
+        api("${Libs.ANDROID_RUNNER}:1.1.1")
+        api("${Libs.ANDROID_RUNNER_EXT}:1.1.1")
+        api("${Libs.COROUTINE_TEST}:1.6.4")
+        api("${Libs.JUNIT}:4.13")
+        api("${Libs.MOCKITO_CORE}:3.9.0")
+        api("${Libs.MOCKITO_KOTLIN}:4.1.0")
+        api("${Libs.MOCKITO_INLINE}:4.9.0")
+        api("${Libs.MOCK_WEB_SERVER}:4.10.0")
     }
 }
