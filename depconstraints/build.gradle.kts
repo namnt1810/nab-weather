@@ -2,7 +2,7 @@ plugins {
     id("java-platform")
 }
 
-val coroutines = "1.3.4"
+val coroutines = "1.6.4"
 
 val javaAnnotation = "1.3.2"
 val annotation = "1.1.0"
@@ -52,12 +52,12 @@ dependencies {
         api("${Libs.GSON}:$gson")
 
         // Test
-        api("${Libs.ESPRESSO_CORE}:3.1.1")
-        api("${Libs.ANDROID_RUNNER}:1.1.1")
-        api("${Libs.ANDROID_RUNNER_EXT}:1.1.1")
+        api("${Libs.ESPRESSO_CORE}:3.5.0")
+        api("${Libs.ANDROID_RUNNER}:1.5.1")
+        api("${Libs.ANDROID_RUNNER_EXT}:1.1.4")
         api("${Libs.COROUTINE_TEST}:1.6.4")
-        api("${Libs.JUNIT}:4.13")
-        api("${Libs.MOCKITO_CORE}:3.9.0")
+        api("${Libs.JUNIT}:4.13.2")
+        api("${Libs.MOCKITO_CORE}:4.9.0")
         api("${Libs.MOCKITO_KOTLIN}:4.1.0")
         api("${Libs.MOCKITO_INLINE}:4.9.0")
         api("${Libs.MOCK_WEB_SERVER}:4.10.0")

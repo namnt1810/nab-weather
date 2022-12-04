@@ -18,6 +18,18 @@ android {
         versionName = Configs.VERSION_NAME
 
         vectorDrawables.useSupportLibrary = true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true",
+                    "room.expandProjection" to "true"
+                )
+            }
+        }
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     namespace = "vn.namnt.nabweather"
@@ -77,11 +89,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    testOptions.unitTests {
+        isIncludeAndroidResources = true
+    }
 }
 
 dependencies {
     api(platform(project(":depconstraints")))
-    kapt(platform(project(":depconstraints")))
+    ksp(platform(project(":depconstraints")))
+    testApi(platform(project(":depconstraints")))
+    androidTestApi(platform(project(":depconstraints")))
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
@@ -108,8 +126,8 @@ dependencies {
     // Dagger
     implementation(Libs.DAGGER)
     implementation(Libs.DAGGER_ANDROID)
-    kapt(Libs.DAGGER_COMPILER)
-    kapt(Libs.DAGGER_PROCESSOR)
+    ksp(Libs.DAGGER_COMPILER)
+    ksp(Libs.DAGGER_PROCESSOR)
 
     // Gson
     implementation(Libs.GSON)
