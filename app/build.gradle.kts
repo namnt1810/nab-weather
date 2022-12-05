@@ -132,6 +132,10 @@ dependencies {
     // Gson
     implementation(Libs.GSON)
 
+    // Retrofit
+    implementation(Libs.RETROFIT)
+    implementation(Libs.RETROFIT_GSON_CONVERTER)
+
 //    debugImplementation(Libs.LEAK_CANARY)
 
     // Instrumentation tests
@@ -139,11 +143,14 @@ dependencies {
     androidTestImplementation(Libs.ESPRESSO_CORE)
     androidTestImplementation(Libs.ANDROID_RUNNER)
     androidTestImplementation(Libs.ANDROID_RUNNER_EXT)
+    androidTestImplementation(Libs.MOCK_WEB_SERVER)
 
     // Local unit tests
     testImplementation(Libs.COROUTINE_TEST)
     testImplementation(Libs.JUNIT)
+    testImplementation(Libs.ROBOELECTRIC)
     testImplementation(Libs.MOCKITO_CORE)
     testImplementation(Libs.MOCKITO_KOTLIN)
     testImplementation(Libs.MOCKITO_INLINE)
+    testImplementation(Libs.MOCK_WEB_SERVER)
 }

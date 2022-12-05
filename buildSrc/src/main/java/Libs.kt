@@ -21,6 +21,9 @@ object Libs {
     const val DAGGER_COMPILER = "com.google.dagger:dagger-compiler"
     const val DAGGER_PROCESSOR = "com.google.dagger:dagger-android-processor"
 
+    const val RETROFIT = "com.squareup.retrofit2:retrofit"
+    const val RETROFIT_GSON_CONVERTER = "com.squareup.retrofit2:converter-gson"
+
     const val GSON = "com.google.code.gson:gson"
 
     const val LEAK_CANARY = "com.squareup.leakcanary:leakcanary-android"
@@ -28,6 +31,7 @@ object Libs {
     const val ANDROID_RUNNER = "androidx.test:runner"
     const val ANDROID_RUNNER_EXT = "androidx.test.ext:junit"
     const val ESPRESSO_CORE = "androidx.test.espresso:espresso-core"
+    const val ROBOELECTRIC = "org.robolectric:robolectric"
 
     const val COROUTINE_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test"
     const val JUNIT = "junit:junit"
