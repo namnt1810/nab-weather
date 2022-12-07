@@ -13,6 +13,8 @@ object Libs {
     const val CORE_KTX = "androidx.core:core-ktx"
     const val MATERIAL = "com.google.android.material:material"
 
+    const val VIEW_MODEL_KTX = "androidx.lifecycle:lifecycle-viewmodel-ktx"
+
     const val ROOM = "androidx.room:room-runtime"
     const val ROOM_COMPILER = "androidx.room:room-compiler"
 

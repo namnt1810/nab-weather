@@ -19,6 +19,16 @@ internal object MockData {
         WeatherInfoDBO(1580578, "Ho Chi Minh City", 1670472000, 0f, 29.38f, 0f, 1010, 66, "light rain"),
     )
 
+    val repositoryWeatherInfo: List<WeatherInfo> = listOf(
+        WeatherInfo(1669953600, 30.08f, METRIC, 1008, 59, "light rain"),
+        WeatherInfo(1670040000, 27.75f, METRIC, 1009, 69, "light rain"),
+        WeatherInfo(1670126400, 25.63f, METRIC, 1011, 78, "light rain"),
+        WeatherInfo(1670212800, 29.45f, METRIC, 1011, 67, "light rain"),
+        WeatherInfo(1670299200, 29.21f, METRIC, 1010, 68, "light rain"),
+        WeatherInfo(1670385600, 28.64f, METRIC, 1010, 70, "light rain"),
+        WeatherInfo(1670472000, 29.38f, METRIC, 1010, 66, "light rain"),
+    )
+
     val remoteResponseJson = """
         {
             "city": {

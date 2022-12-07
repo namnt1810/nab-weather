@@ -98,7 +98,7 @@ class WeatherInfoRepositoryTest {
         ).last()
 
         verify(localDatasource).getCityInfo("saigon")
-        verify(localDatasource).saveCityInfo(CityInfoDBO("saigon", 1580578, requestTime))
+        verify(localDatasource).saveCityInfo(CityInfoDBO("saigon", 1580578, "200", requestTime))
         verify(localDatasource).saveWeatherInfo(*localExpected.toTypedArray())
         verify(localDatasource).getWeatherInfo(1580578, calendar.timeInMillis, 7)
 
@@ -128,7 +128,7 @@ class WeatherInfoRepositoryTest {
         localDatasource.stub {
             onBlocking {
                 getCityInfo("saigon")
-            }.doReturn(CityInfoDBO("saigon", 1580578, lastModified))
+            }.doReturn(CityInfoDBO("saigon", 1580578, "200", lastModified))
         }
         localDatasource.stub {
             onBlocking {

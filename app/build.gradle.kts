@@ -119,6 +119,8 @@ dependencies {
     implementation(Libs.MATERIAL)
     implementation(Libs.MULTI_DEX)
 
+    implementation(Libs.VIEW_MODEL_KTX)
+
     implementation(Libs.ROOM)
     ksp(Libs.ROOM_COMPILER)
 

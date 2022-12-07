@@ -17,6 +17,8 @@ data class CityInfoDBO(
     val city: String,
     @ColumnInfo(name = "actual_city_id")
     val actualId: Int? = null,
+    @ColumnInfo(name = "actual_error_code")
+    val errorCode: String,
     @ColumnInfo(name = "last_modified")
     val lastModified: Long = System.currentTimeMillis()
 )

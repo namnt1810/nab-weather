@@ -14,6 +14,7 @@ val espresso = "3.1.1"
 val guava = "31.1-android"
 val gson = "2.8.6"
 val junit = "4.13"
+val lifecycle = "2.5.1"
 val material = "1.2.1"
 val mockito = "3.3.1"
 val mockitoKotlin = "1.5.0"
@@ -40,6 +41,8 @@ dependencies {
         api("${Libs.CORE_KTX}:$core")
         api("${Libs.MATERIAL}:$material")
         api("${Libs.MULTI_DEX}:$multidex")
+
+        api("${Libs.VIEW_MODEL_KTX}:$lifecycle")
 
         api("${Libs.ROOM}:$room")
         api("${Libs.ROOM_COMPILER}:$room")

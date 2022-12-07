@@ -35,6 +35,7 @@ internal class WeatherInfoRepositoryImpl constructor(
                     val cityInfoDBO = CityInfoDBO(
                         city,
                         if (response.isSuccess) response.city.id else null,
+                        response.code,
                         requestTime
                     )
 
@@ -62,8 +63,8 @@ internal class WeatherInfoRepositoryImpl constructor(
                     }
                 }
 
-                if (cityInfo != null && cityInfo.actualId == null) {
-                    emit(Result.Success(emptyList()))
+                if (cityInfo != null && !cityInfo.isActualRequestSuccess()) {
+                    emit(Result.Error(DomainException(cityInfo.errorCode)))
                 } else {
                     val weatherDboList = localDatasource.getWeatherInfo(
                         cityInfo!!.actualId!!,
@@ -101,6 +102,8 @@ internal fun CityInfoDBO?.needFetchRemoteInfo(timeToCompare: Long): Boolean {
     // If last request's time is is more than 10 minute, return true
     return timeToCompare - lastModified > 10 * 60 * 1000
 }
+
+internal fun CityInfoDBO.isActualRequestSuccess(): Boolean = errorCode == "200"
 
 internal fun kelvinToCelcius(tempInK: Float) = tempInK - 273.15f
 internal fun celciusToKelvin(tempInC: Float) = tempInC + 273.15f
