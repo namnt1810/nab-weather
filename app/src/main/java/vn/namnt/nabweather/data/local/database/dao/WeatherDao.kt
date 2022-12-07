@@ -14,8 +14,8 @@ interface WeatherDao {
 
     @Query(
         """
-        SELECT * FROM $WEATHER_INFO WHERE city = :city AND date >= :fromDate ORDER BY date LIMIT :daysCount
+        SELECT * FROM $WEATHER_INFO WHERE city_id = :cityId AND date >= :fromDate ORDER BY date LIMIT :daysCount
     """
     )
-    fun getWeatherInfo(city: String, fromDate: Long, daysCount: Int): List<WeatherInfoDBO>
+    fun getWeatherInfo(cityId: Int, fromDate: Long, daysCount: Int): List<WeatherInfoDBO>
 }

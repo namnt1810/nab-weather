@@ -1,5 +1,6 @@
 package vn.namnt.nabweather.data.local
 
+import vn.namnt.nabweather.data.local.database.entity.CityInfoDBO
 import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
 
 /**
@@ -8,7 +9,7 @@ import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
  */
 interface WeatherInfoLocalDatasource {
     suspend fun saveWeatherInfo(vararg items: WeatherInfoDBO)
-    suspend fun getWeatherInfo(city: String, fromDate: Long, daysCount: Int): List<WeatherInfoDBO>
-    suspend fun saveCityUpdateTime(city: String, lastUpdateTs: Long)
-    suspend fun getCityLastUpdatedTime(city: String): Long
+    suspend fun getWeatherInfo(cityId: Int, fromDate: Long, daysCount: Int): List<WeatherInfoDBO>
+    suspend fun saveCityInfo(dbo: CityInfoDBO)
+    suspend fun getCityInfo(city: String): CityInfoDBO?
 }

@@ -7,5 +7,5 @@ package vn.namnt.nabweather.data.local.database.entity
 
 object WeatherDatabaseTableName {
     const val WEATHER_INFO = "weather_info"
-    const val CITY_LAST_UPDATED_TIME = "city_last_updated_time"
+    const val CITY_INFO = "city_info"
 }

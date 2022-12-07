@@ -44,8 +44,6 @@ class WeatherInfoRepositoryTest {
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
-
-//        repository = WeatherInfoRepositoryImpl(localDatasource, remoteDatasource)
     }
 
     @Test

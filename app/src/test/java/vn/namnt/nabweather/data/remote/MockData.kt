@@ -1,6 +1,7 @@
 package vn.namnt.nabweather.data.remote
 
 import vn.namnt.nabweather.common.TemperatureUnit.METRIC
+import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
 import vn.namnt.nabweather.entity.WeatherInfo
 
 /**
@@ -8,14 +9,14 @@ import vn.namnt.nabweather.entity.WeatherInfo
  * @since 02/12/2022
  */
 internal object MockData {
-    val remoteWeatherInfo: List<WeatherInfo> = listOf(
-        WeatherInfo(1669953600, 30.08f, METRIC, 1008, 59, "light rain"),
-        WeatherInfo(1670040000, 27.75f, METRIC, 1009, 69, "light rain"),
-        WeatherInfo(1670126400, 25.63f, METRIC, 1011, 78, "light rain"),
-        WeatherInfo(1670212800, 29.45f, METRIC, 1011, 67, "light rain"),
-        WeatherInfo(1670299200, 29.21f, METRIC, 1010, 68, "light rain"),
-        WeatherInfo(1670385600, 28.64f, METRIC, 1010, 70, "light rain"),
-        WeatherInfo(1670472000, 29.38f, METRIC, 1010, 66, "light rain"),
+    val localWeatherInfo: List<WeatherInfoDBO> = listOf(
+        WeatherInfoDBO(1580578, "Ho Chi Minh City", 1669953600, 0f, 30.08f, 0f, 1008, 59, "light rain"),
+        WeatherInfoDBO(1580578, "Ho Chi Minh City", 1670040000, 0f, 27.75f, 0f, 1009, 69, "light rain"),
+        WeatherInfoDBO(1580578, "Ho Chi Minh City", 1670126400, 0f, 25.63f, 0f, 1011, 78, "light rain"),
+        WeatherInfoDBO(1580578, "Ho Chi Minh City", 1670212800, 0f, 29.45f, 0f, 1011, 67, "light rain"),
+        WeatherInfoDBO(1580578, "Ho Chi Minh City", 1670299200, 0f, 29.21f, 0f, 1010, 68, "light rain"),
+        WeatherInfoDBO(1580578, "Ho Chi Minh City", 1670385600, 0f, 28.64f, 0f, 1010, 70, "light rain"),
+        WeatherInfoDBO(1580578, "Ho Chi Minh City", 1670472000, 0f, 29.38f, 0f, 1010, 66, "light rain"),
     )
 
     val remoteResponseJson = """

@@ -10,17 +10,19 @@ import vn.namnt.nabweather.data.local.database.entity.WeatherDatabaseTableName.W
  */
 @Entity(
     tableName = WEATHER_INFO,
-    primaryKeys = ["city", "date"]
+    primaryKeys = ["city_id", "date"]
 )
 data class WeatherInfoDBO(
+    @ColumnInfo(name = "city_id")
+    val cityId: Int,
     val city: String,
     val date: Long,
     @ColumnInfo(name = "temperature_default")
-    val tempInK: Float? = null,
+    val tempInK: Float,
     @ColumnInfo(name = "temperature_metric")
-    val tempInC: Float? = null,
+    val tempInC: Float,
     @ColumnInfo(name = "temperature_imperial")
-    val tempInF: Float? = null,
+    val tempInF: Float,
     val pressure: Int,
     val humidity: Int,
     val description: String = ""

@@ -21,7 +21,8 @@ internal class WeatherInfoRemoteDatasourceImpl @Inject constructor(
         tempUnit: TemperatureUnit
     ): WeatherInfoResponse {
         return withContext(dispatcher) {
-            val callResponse = weatherService.getWeatherForecast(city, daysCount, tempUnit.queryString()).execute()
+            val callResponse =
+                weatherService.getWeatherForecast(city, daysCount, tempUnit.queryString).execute()
 
             if (callResponse.isSuccessful) {
                 return@withContext callResponse.body()!!
@@ -32,8 +33,9 @@ internal class WeatherInfoRemoteDatasourceImpl @Inject constructor(
     }
 }
 
-internal fun TemperatureUnit.queryString() = when (this) {
-    TemperatureUnit.DEFAULT -> "default"
-    TemperatureUnit.METRIC -> "metric"
-    TemperatureUnit.IMPERIAL -> "imperial"
-}
+internal val TemperatureUnit.queryString: String
+    get() = when (this) {
+        TemperatureUnit.DEFAULT -> "default"
+        TemperatureUnit.METRIC -> "metric"
+        TemperatureUnit.IMPERIAL -> "imperial"
+    }

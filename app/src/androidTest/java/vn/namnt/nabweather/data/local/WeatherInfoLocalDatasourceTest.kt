@@ -6,11 +6,15 @@ import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import vn.namnt.nabweather.common.TemperatureUnit
 import vn.namnt.nabweather.data.local.database.WeatherDatabase
+import vn.namnt.nabweather.data.local.database.entity.CityInfoDBO
 import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
+import vn.namnt.nabweather.repository.toDefaultTemperature
 import java.io.IOException
 
 /**
@@ -32,25 +36,48 @@ class WeatherInfoLocalDatasourceTest {
     }
 
     @Test
-    fun cityLastUpdatedTimeTest() = runTest {
+    fun getSetCityInfoTest() = runTest {
         val time = System.currentTimeMillis()
-        datasource.saveCityUpdateTime("saigon", time)
 
-        assert(datasource.getCityLastUpdatedTime("saigon") == time)
+        val cityInfo = CityInfoDBO(
+            "saigon",
+            actualId = 1,
+            lastModified = time
+        )
+
+        datasource.saveCityInfo(cityInfo)
+
+        Assert.assertEquals(cityInfo, datasource.getCityInfo("saigon"))
     }
 
     @Test
-    fun replaceCityUpdatedTimeTest() = runTest {
+    fun nonExistCityInfoTest() = runTest {
+        Assert.assertNull(datasource.getCityInfo("saigon"))
+    }
+
+    @Test
+    fun replaceCityInfoTest() = runTest {
         val time = System.currentTimeMillis()
 
-        datasource.saveCityUpdateTime("saigon", time)
+        val before = CityInfoDBO(
+            "saigon",
+            actualId = 1,
+            lastModified = time
+        )
+
+        datasource.saveCityInfo(before)
 
         val timeAfter = time + 10 * 60 * 1000 // 10 minutes
 
-        datasource.saveCityUpdateTime("saigon", timeAfter)
+        val after = CityInfoDBO(
+            "saigon",
+            actualId = 1,
+            lastModified = timeAfter
+        )
 
-        assert(datasource.getCityLastUpdatedTime("saigon") != time)
-        assert(datasource.getCityLastUpdatedTime("saigon") == timeAfter)
+        datasource.saveCityInfo(after)
+
+        Assert.assertEquals(after, datasource.getCityInfo("saigon"))
     }
 
     @Test
@@ -58,9 +85,12 @@ class WeatherInfoLocalDatasourceTest {
         val time = System.currentTimeMillis()
 
         val dbo = WeatherInfoDBO(
+            1,
             "saigon",
             time,
+            tempInK = 31f.toDefaultTemperature(TemperatureUnit.METRIC),
             tempInC = 31f,
+            tempInF = 31f.toDefaultTemperature(TemperatureUnit.METRIC),
             pressure = 1001,
             humidity = 79,
             description = "light rain"
@@ -68,7 +98,7 @@ class WeatherInfoLocalDatasourceTest {
 
         datasource.saveWeatherInfo(dbo)
 
-        assert(datasource.getWeatherInfo("saigon", time, 1)[0] == dbo)
+        assert(datasource.getWeatherInfo(1, time, 1)[0] == dbo)
     }
 
     @Test
@@ -76,9 +106,12 @@ class WeatherInfoLocalDatasourceTest {
         val time = System.currentTimeMillis()
 
         val previous = WeatherInfoDBO(
+            1,
             "saigon",
             time,
+            tempInK = 31f.toDefaultTemperature(TemperatureUnit.METRIC),
             tempInC = 31f,
+            tempInF = 31f.toDefaultTemperature(TemperatureUnit.METRIC),
             pressure = 1001,
             humidity = 79,
             description = "light rain"
@@ -87,9 +120,12 @@ class WeatherInfoLocalDatasourceTest {
         datasource.saveWeatherInfo(previous)
 
         val after = WeatherInfoDBO(
+            1,
             "saigon",
             time,
+            tempInK = 33f.toDefaultTemperature(TemperatureUnit.METRIC),
             tempInC = 33f,
+            tempInF = 33f.toDefaultTemperature(TemperatureUnit.METRIC),
             pressure = 1011,
             humidity = 60,
             description = "sunny"
@@ -97,8 +133,8 @@ class WeatherInfoLocalDatasourceTest {
 
         datasource.saveWeatherInfo(after)
 
-        assert(datasource.getWeatherInfo("saigon", time, 1)[0] != previous)
-        assert(datasource.getWeatherInfo("saigon", time, 1)[0] == after)
+        assert(datasource.getWeatherInfo(1, time, 1)[0] != previous)
+        assert(datasource.getWeatherInfo(1, time, 1)[0] == after)
     }
 
     @After

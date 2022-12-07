@@ -28,13 +28,24 @@ data class WeatherInfoResponse(
         @SerializedName("dt")
         val date: Long,
 
-        @SerializedName("temp.day")
-        val temperature: Float = 0f,
+        @SerializedName("temp")
+        val temperature: TemperatureInfo,
 
         val pressure: Int,
         val humidity: Int,
 
-        @SerializedName("weather.description")
-        val description: String = ""
-    )
+        @SerializedName("weather")
+        val detail: List<WeatherDetail>
+    ) {
+        data class TemperatureInfo(
+            val day: Float
+        )
+
+        data class WeatherDetail(
+            val description: String
+        )
+    }
 }
+
+val WeatherInfoResponse.isSuccess: Boolean
+    get() = this.code == "200"

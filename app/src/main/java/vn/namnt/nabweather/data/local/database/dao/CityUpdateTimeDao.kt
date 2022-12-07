@@ -4,18 +4,18 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import vn.namnt.nabweather.data.local.database.entity.CityLastUpdatedTimeDBO
-import vn.namnt.nabweather.data.local.database.entity.WeatherDatabaseTableName.CITY_LAST_UPDATED_TIME
+import vn.namnt.nabweather.data.local.database.entity.CityInfoDBO
+import vn.namnt.nabweather.data.local.database.entity.WeatherDatabaseTableName.CITY_INFO
 
 @Dao
-interface CityUpdateTimeDao {
+interface CityInfoDao {
     @Insert(onConflict = REPLACE)
-    fun save(dbo: CityLastUpdatedTimeDBO)
+    fun save(dbo: CityInfoDBO)
 
     @Query(
         """
-        SELECT last_modified FROM $CITY_LAST_UPDATED_TIME WHERE city = :city 
+        SELECT * FROM $CITY_INFO WHERE city = :city 
     """
     )
-    fun getCityLastUpdatedTime(city: String): Long
+    fun getCityInfo(city: String): CityInfoDBO
 }
