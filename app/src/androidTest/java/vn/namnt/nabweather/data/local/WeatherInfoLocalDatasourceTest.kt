@@ -4,6 +4,7 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -42,6 +43,7 @@ class WeatherInfoLocalDatasourceTest {
         val cityInfo = CityInfoDBO(
             "saigon",
             actualId = 1,
+            200,
             lastModified = time
         )
 
@@ -62,6 +64,7 @@ class WeatherInfoLocalDatasourceTest {
         val before = CityInfoDBO(
             "saigon",
             actualId = 1,
+            200,
             lastModified = time
         )
 
@@ -72,6 +75,7 @@ class WeatherInfoLocalDatasourceTest {
         val after = CityInfoDBO(
             "saigon",
             actualId = 1,
+            200,
             lastModified = timeAfter
         )
 
@@ -135,6 +139,33 @@ class WeatherInfoLocalDatasourceTest {
 
         assert(datasource.getWeatherInfo(1, time, 1)[0] != previous)
         assert(datasource.getWeatherInfo(1, time, 1)[0] == after)
+    }
+
+    @Test
+    fun deleteObsoleteDataTest() = runTest {
+        val now = System.currentTimeMillis()
+
+        val oldCity = CityInfoDBO("saigon", 1, 200, now - 20 * 60 * 1000)
+        datasource.saveCityInfo(oldCity)
+        advanceUntilIdle()
+
+        val oldCityWeather = WeatherInfoDBO(oldCity.actualId!!, "Ho Chi Minh", oldCity.lastModified, 0f, 0f, 0f, 0, 0)
+        datasource.saveWeatherInfo(oldCityWeather)
+        advanceUntilIdle()
+
+        val newCity = CityInfoDBO("hanoi", 2, 200, now)
+        datasource.saveCityInfo(newCity)
+        advanceUntilIdle()
+
+        val newCityWeather = WeatherInfoDBO(newCity.actualId!!, "Ha Noi", newCity.lastModified, 0f, 0f, 0f, 0, 0)
+        datasource.saveWeatherInfo(newCityWeather)
+        advanceUntilIdle()
+
+        datasource.deleteObsoleteData()
+        advanceUntilIdle()
+
+        Assert.assertEquals(0, datasource.getWeatherInfo(1, oldCity.lastModified, 1).size)
+        Assert.assertEquals(1, datasource.getWeatherInfo(2, newCity.lastModified, 1).size)
     }
 
     @After

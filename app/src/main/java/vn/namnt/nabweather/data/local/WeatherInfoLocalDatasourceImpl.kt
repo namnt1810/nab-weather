@@ -1,21 +1,15 @@
 package vn.namnt.nabweather.data.local
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import vn.namnt.nabweather.data.local.database.WeatherDatabase
 import vn.namnt.nabweather.data.local.database.entity.CityInfoDBO
 import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
 import javax.inject.Inject
 
 internal class WeatherInfoLocalDatasourceImpl @Inject constructor(
-    private val database: WeatherDatabase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val database: WeatherDatabase
 ) : WeatherInfoLocalDatasource {
     override suspend fun saveWeatherInfo(vararg items: WeatherInfoDBO) {
-        withContext(dispatcher) {
-            database.weatherDao().save(*items)
-        }
+        database.cityWeatherDao().save(*items)
     }
 
     override suspend fun getWeatherInfo(
@@ -23,21 +17,18 @@ internal class WeatherInfoLocalDatasourceImpl @Inject constructor(
         fromDate: Long,
         daysCount: Int
     ): List<WeatherInfoDBO> {
-        return withContext(dispatcher) {
-            database.weatherDao().getWeatherInfo(cityId, fromDate, daysCount)
-        }
+        return database.cityWeatherDao().getWeatherInfo(cityId, fromDate, daysCount)
     }
 
     override suspend fun saveCityInfo(dbo: CityInfoDBO) {
-        withContext(dispatcher) {
-            database.cityUpdateTimeDao().save(dbo)
-        }
+        database.cityWeatherDao().save(dbo)
     }
 
     override suspend fun getCityInfo(city: String): CityInfoDBO? {
-        return withContext(dispatcher) {
-            database.cityUpdateTimeDao().getCityInfo(city)
-        }
+        return database.cityWeatherDao().getCityInfo(city)
     }
 
+    override suspend fun deleteObsoleteData(): Int {
+        return database.cityWeatherDao().deleteObsoleteInfo()
+    }
 }

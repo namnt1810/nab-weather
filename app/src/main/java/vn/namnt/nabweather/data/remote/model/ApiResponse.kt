@@ -7,10 +7,6 @@ import com.google.gson.annotations.SerializedName
  * @since 05/12/2022
  */
 data class WeatherInfoResponse(
-    // Common field
-    @SerializedName("cod")
-    val code: String,
-
     // Weather forecast specific
     val city: CityInfo,
 
@@ -46,6 +42,3 @@ data class WeatherInfoResponse(
         )
     }
 }
-
-val WeatherInfoResponse.isSuccess: Boolean
-    get() = this.code == "200"

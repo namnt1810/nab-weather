@@ -1,4 +1,4 @@
-package vn.namnt.nabweather.data.remote
+package vn.namnt.nabweather.data
 
 import vn.namnt.nabweather.common.TemperatureUnit.METRIC
 import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO

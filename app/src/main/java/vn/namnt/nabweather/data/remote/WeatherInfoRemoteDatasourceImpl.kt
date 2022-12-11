@@ -1,17 +1,19 @@
 package vn.namnt.nabweather.data.remote
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import vn.namnt.nabweather.common.TemperatureUnit
+import vn.namnt.nabweather.data.remote.error.ApiErrorCodes
 import vn.namnt.nabweather.data.remote.model.WeatherInfoResponse
 import vn.namnt.nabweather.data.remote.service.WeatherInfoService
+import vn.namnt.nabweather.repository.exception.ApiException
 import javax.inject.Inject
 
 internal class WeatherInfoRemoteDatasourceImpl @Inject constructor(
-    private val retrofit: Retrofit,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    retrofit: Retrofit,
+    private val dispatcher: CoroutineDispatcher
 ) : WeatherInfoRemoteDatasource {
     private val weatherService: WeatherInfoService = retrofit.create(WeatherInfoService::class.java)
 
@@ -27,7 +29,11 @@ internal class WeatherInfoRemoteDatasourceImpl @Inject constructor(
             if (callResponse.isSuccessful) {
                 return@withContext callResponse.body()!!
             } else {
-                throw Exception()
+                val code = callResponse.code()
+                throw when (code) {
+                    ApiErrorCodes.API_KEY_ERROR, ApiErrorCodes.NOT_FOUND, ApiErrorCodes.API_LIMIT_EXCEEDED -> ApiException(code)
+                    else -> HttpException(callResponse)
+                }
             }
         }
     }

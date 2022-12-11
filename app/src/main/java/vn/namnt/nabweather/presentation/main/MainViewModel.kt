@@ -1,34 +1,33 @@
-package vn.namnt.nabweather.ui.main
+package vn.namnt.nabweather.presentation.main
 
-import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import vn.namnt.nabweather.common.TemperatureUnit
 import vn.namnt.nabweather.entity.WeatherInfo
 import vn.namnt.nabweather.repository.Result
 import vn.namnt.nabweather.repository.WeatherInfoRepository
-import vn.namnt.nabweather.ui.main.WeatherInfoUiState.Error
-import vn.namnt.nabweather.ui.main.WeatherInfoUiState.Initial
+import vn.namnt.nabweather.presentation.main.WeatherInfoUiState.Error
+import vn.namnt.nabweather.presentation.main.WeatherInfoUiState.Initial
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.temporal.TemporalField
-import java.util.*
+import javax.inject.Inject
 
 sealed class WeatherInfoUiState {
     object Initial : WeatherInfoUiState()
-    object Loading : WeatherInfoUiState()
+    class Loading : WeatherInfoUiState()
     data class Success(val list: List<WeatherInfo>) : WeatherInfoUiState()
-    data class Error(val exception: Throwable) : WeatherInfoUiState()
+    sealed class Error : WeatherInfoUiState() {
+        class InvalidInput: Error()
+        data class WrappedException(val exception: Throwable): Error()
+    }
 }
 
-class MainViewModel constructor(
+class MainViewModel @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val repository: WeatherInfoRepository
 ) : ViewModel() {
@@ -37,12 +36,12 @@ class MainViewModel constructor(
 
     fun getWeatherInfo(city: String) {
         viewModelScope.launch {
-            if (!city.matches("^[a-zA-Z]{2,}$".toRegex())) {
-                _uiState.emit(Error(IllegalArgumentException("Search query must be greater than 3 characters and contain only alphabet characters")))
+            if (!city.matches("^[a-zA-Z ]{3,}$".toRegex())) {
+                _uiState.emit(Error.InvalidInput())
                 return@launch
             }
 
-            _uiState.emit(WeatherInfoUiState.Loading)
+            _uiState.emit(WeatherInfoUiState.Loading())
 
             repository.getWeatherInfo(
                 city,
@@ -54,14 +53,13 @@ class MainViewModel constructor(
                 Instant.now().toEpochMilli()
             ).flowOn(dispatcher)
                 .catch {
-                    _uiState.emit(Error(it))
+                    _uiState.emit(Error.WrappedException(it))
                 }.collect {
                     when (it) {
                         is Result.Success -> _uiState.emit(WeatherInfoUiState.Success(it.data))
-                        is Result.Error -> _uiState.emit(Error(it.throwable))
+                        is Result.Error -> _uiState.emit(Error.WrappedException(it.throwable))
                     }
                 }
-
         }
     }
 }

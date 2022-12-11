@@ -2,8 +2,7 @@ package vn.namnt.nabweather.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import vn.namnt.nabweather.data.local.database.dao.CityInfoDao
-import vn.namnt.nabweather.data.local.database.dao.WeatherDao
+import vn.namnt.nabweather.data.local.database.dao.CityWeatherDao
 import vn.namnt.nabweather.data.local.database.entity.CityInfoDBO
 import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
 
@@ -13,6 +12,5 @@ import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
     exportSchema = false
 )
 abstract class WeatherDatabase : RoomDatabase() {
-    abstract fun weatherDao(): WeatherDao
-    abstract fun cityUpdateTimeDao(): CityInfoDao
+    abstract fun cityWeatherDao(): CityWeatherDao
 }

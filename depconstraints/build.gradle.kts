@@ -9,7 +9,7 @@ val annotation = "1.1.0"
 val appcompat = "1.1.0"
 val constraintLayout = "2.0.4"
 val core = "1.2.0"
-val dagger = "2.28.3"
+val dagger = "2.44.2"
 val espresso = "3.1.1"
 val guava = "31.1-android"
 val gson = "2.8.6"
@@ -42,10 +42,14 @@ dependencies {
         api("${Libs.MATERIAL}:$material")
         api("${Libs.MULTI_DEX}:$multidex")
 
+        api("${Libs.LIFECYCLE_RUNTIME}:$lifecycle")
         api("${Libs.VIEW_MODEL_KTX}:$lifecycle")
 
         api("${Libs.ROOM}:$room")
+        api("${Libs.ROOM_KTX}:$room")
         api("${Libs.ROOM_COMPILER}:$room")
+
+        api("${Libs.WORK_MANAGER}:2.7.1")
 
         // 3rd-party
         api("${Libs.DAGGER}:$dagger")
@@ -55,6 +59,8 @@ dependencies {
 
         api("${Libs.RETROFIT}:$retrofit")
         api("${Libs.RETROFIT_GSON_CONVERTER}:$retrofit")
+
+        api("${Libs.OKHTTP_LOGGING_INTERCEPTOR}:4.10.0")
 
         api("${Libs.GSON}:2.8.6")
 
@@ -68,6 +74,6 @@ dependencies {
         api("${Libs.MOCKITO_CORE}:4.9.0")
         api("${Libs.MOCKITO_KOTLIN}:4.1.0")
         api("${Libs.MOCKITO_INLINE}:4.9.0")
-        api("${Libs.MOCK_WEB_SERVER}:3.14.9")
+        api("${Libs.MOCK_WEB_SERVER}:4.10.0")
     }
 }

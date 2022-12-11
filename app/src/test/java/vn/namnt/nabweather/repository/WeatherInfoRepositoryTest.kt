@@ -12,10 +12,10 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import vn.namnt.nabweather.common.TemperatureUnit.*
+import vn.namnt.nabweather.data.MockData
 import vn.namnt.nabweather.data.local.WeatherInfoLocalDatasource
 import vn.namnt.nabweather.data.local.database.entity.CityInfoDBO
 import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
-import vn.namnt.nabweather.data.remote.MockData
 import vn.namnt.nabweather.data.remote.WeatherInfoRemoteDatasource
 import vn.namnt.nabweather.data.remote.error.NoConnectivityException
 import vn.namnt.nabweather.data.remote.error.NoInternetException
@@ -97,11 +97,6 @@ class WeatherInfoRepositoryTest {
             requestTime
         ).last()
 
-        verify(localDatasource).getCityInfo("saigon")
-        verify(localDatasource).saveCityInfo(CityInfoDBO("saigon", 1580578, "200", requestTime))
-        verify(localDatasource).saveWeatherInfo(*localExpected.toTypedArray())
-        verify(localDatasource).getWeatherInfo(1580578, calendar.timeInMillis, 7)
-
         assertEquals(repoExpected, actual.data)
     }
 
@@ -128,7 +123,7 @@ class WeatherInfoRepositoryTest {
         localDatasource.stub {
             onBlocking {
                 getCityInfo("saigon")
-            }.doReturn(CityInfoDBO("saigon", 1580578, "200", lastModified))
+            }.doReturn(CityInfoDBO("saigon", 1580578, 200, lastModified))
         }
         localDatasource.stub {
             onBlocking {
@@ -143,8 +138,6 @@ class WeatherInfoRepositoryTest {
             System.currentTimeMillis()
         ).last()
 
-        verify(localDatasource).getCityInfo("saigon")
-        verify(localDatasource).getWeatherInfo(1580578, calendar.timeInMillis, 7)
         assertEquals(repoExpected, actual.data)
     }
 

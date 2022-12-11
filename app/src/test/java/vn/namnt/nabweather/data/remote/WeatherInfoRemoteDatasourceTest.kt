@@ -2,22 +2,23 @@ package vn.namnt.nabweather.data.remote
 
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import vn.namnt.nabweather.TestCoroutineRule
 import vn.namnt.nabweather.common.TemperatureUnit.*
+import vn.namnt.nabweather.data.MockData
 import vn.namnt.nabweather.data.remote.error.ApiErrorCodes
 import vn.namnt.nabweather.data.remote.interceptors.RequestInterceptor
 import vn.namnt.nabweather.data.remote.model.WeatherInfoResponse
+import vn.namnt.nabweather.repository.exception.ApiException
 
 /**
  * @author namnt
@@ -26,6 +27,11 @@ import vn.namnt.nabweather.data.remote.model.WeatherInfoResponse
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class WeatherInfoRemoteDatasourceTest {
+    @get:Rule
+    var testRule = TestCoroutineRule()
+
+    private val coroutineDispatcher = UnconfinedTestDispatcher()
+
     private val testAppId = "123abc"
     private val gson = GsonBuilder().create()
     private lateinit var datasource: WeatherInfoRemoteDatasource
@@ -45,7 +51,7 @@ class WeatherInfoRemoteDatasourceTest {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-        datasource = WeatherInfoRemoteDatasourceImpl(retrofit)
+        datasource = WeatherInfoRemoteDatasourceImpl(retrofit, coroutineDispatcher)
     }
 
     @Test
@@ -85,6 +91,7 @@ class WeatherInfoRemoteDatasourceTest {
     fun apiKeyErrorTest() = runTest {
         mockWebServer.enqueue(
             MockResponse()
+                .setResponseCode(ApiErrorCodes.API_KEY_ERROR)
                 .setBody(
                     """
                 {
@@ -94,15 +101,19 @@ class WeatherInfoRemoteDatasourceTest {
                 )
         )
 
-        val response = datasource.getWeatherInfo("v", 7, DEFAULT)
-
-        Assert.assertEquals(ApiErrorCodes.API_KEY_ERROR, response.code)
+        try {
+            datasource.getWeatherInfo("v", 7, DEFAULT)
+        } catch (e: Exception) {
+            assert(e is ApiException)
+            assert((e as ApiException).code == ApiErrorCodes.API_KEY_ERROR)
+        }
     }
 
     @Test
     fun invalidCityTest() = runTest {
         mockWebServer.enqueue(
             MockResponse()
+                .setResponseCode(ApiErrorCodes.NOT_FOUND)
                 .setBody(
                     """
                 {
@@ -112,9 +123,12 @@ class WeatherInfoRemoteDatasourceTest {
                 )
         )
 
-        val response = datasource.getWeatherInfo("v", 7, DEFAULT)
-
-        Assert.assertEquals(ApiErrorCodes.NOT_FOUND, response.code)
+        try {
+            datasource.getWeatherInfo("v", 7, DEFAULT)
+        } catch (e: Exception) {
+            assert(e is ApiException)
+            assert((e as ApiException).code == ApiErrorCodes.NOT_FOUND)
+        }
     }
 
     @Test
@@ -140,6 +154,7 @@ class WeatherInfoRemoteDatasourceTest {
     fun apiCallExceededTest() = runTest {
         mockWebServer.enqueue(
             MockResponse()
+                .setResponseCode(ApiErrorCodes.API_LIMIT_EXCEEDED)
                 .setBody(
                     """
                 {
@@ -149,9 +164,12 @@ class WeatherInfoRemoteDatasourceTest {
                 )
         )
 
-        val response = datasource.getWeatherInfo("v", 7, DEFAULT)
-
-        assert(response.code == ApiErrorCodes.API_LIMIT_EXCEEDED)
+        try {
+            datasource.getWeatherInfo("v", 7, DEFAULT)
+        } catch (e: Exception) {
+            assert(e is ApiException)
+            assert((e as ApiException).code == ApiErrorCodes.API_LIMIT_EXCEEDED)
+        }
     }
 
     @After

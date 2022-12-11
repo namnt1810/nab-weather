@@ -4,7 +4,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("com.google.devtools.ksp") version "1.7.20-1.0.8"
+//    id("com.google.devtools.ksp") version "1.7.20-1.0.8"
 }
 
 android {
@@ -30,6 +30,10 @@ android {
         }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     namespace = "vn.namnt.nabweather"
@@ -97,7 +101,8 @@ android {
 
 dependencies {
     api(platform(project(":depconstraints")))
-    ksp(platform(project(":depconstraints")))
+    kapt(platform(project(":depconstraints"))) // Dagger does not support KSP yet
+//    ksp(platform(project(":depconstraints")))
     testApi(platform(project(":depconstraints")))
     androidTestApi(platform(project(":depconstraints")))
 
@@ -119,17 +124,22 @@ dependencies {
     implementation(Libs.MATERIAL)
     implementation(Libs.MULTI_DEX)
 
+    implementation(Libs.LIFECYCLE_RUNTIME)
     implementation(Libs.VIEW_MODEL_KTX)
 
     implementation(Libs.ROOM)
-    ksp(Libs.ROOM_COMPILER)
+    implementation(Libs.ROOM_KTX)
+    kapt(Libs.ROOM_COMPILER)
+//    ksp(Libs.ROOM_COMPILER)
+
+    implementation(Libs.WORK_MANAGER)
 
     // 3rd-party
     // Dagger
     implementation(Libs.DAGGER)
     implementation(Libs.DAGGER_ANDROID)
-    ksp(Libs.DAGGER_COMPILER)
-    ksp(Libs.DAGGER_PROCESSOR)
+    kapt(Libs.DAGGER_COMPILER)
+    kapt(Libs.DAGGER_PROCESSOR)
 
     // Gson
     implementation(Libs.GSON)
@@ -137,6 +147,9 @@ dependencies {
     // Retrofit
     implementation(Libs.RETROFIT)
     implementation(Libs.RETROFIT_GSON_CONVERTER)
+
+    // Logging interceptor
+    debugImplementation(Libs.OKHTTP_LOGGING_INTERCEPTOR)
 
 //    debugImplementation(Libs.LEAK_CANARY)
 

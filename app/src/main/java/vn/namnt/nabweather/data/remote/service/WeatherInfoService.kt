@@ -10,7 +10,7 @@ import vn.namnt.nabweather.data.remote.model.WeatherInfoResponse
  * @since 05/12/2022
  */
 internal interface WeatherInfoService {
-    @GET("/daily")
+    @GET("/data/2.5/forecast/daily")
     fun getWeatherForecast(
         @Query("q")
         city: String,

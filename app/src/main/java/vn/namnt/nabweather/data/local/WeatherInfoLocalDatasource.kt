@@ -12,4 +12,5 @@ interface WeatherInfoLocalDatasource {
     suspend fun getWeatherInfo(cityId: Int, fromDate: Long, daysCount: Int): List<WeatherInfoDBO>
     suspend fun saveCityInfo(dbo: CityInfoDBO)
     suspend fun getCityInfo(city: String): CityInfoDBO?
+    suspend fun deleteObsoleteData(): Int
 }

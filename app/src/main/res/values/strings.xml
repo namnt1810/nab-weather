@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">NABWeatherInfo</string>
+
+    <string name="error_unknown_message">An unknown error occurred. Message: %1$s.</string>
+    <string name="error_no_connectivity_message">Your device does not connect to any network.</string>
+    <string name="error_no_internet_message">Your device does not connect to internet.</string>
+    <string name="error_http_exception_message">There was an error when making request. Code: %1$d, message: %2$s.</string>
+    <string name="error_city_not_found_message">No such city name.</string>
+    <string name="error_invalid_api_key_message">There was problem with API\'s appId.</string>
+    <string name="error_api_limit_exceeded_message">API request exceeded limit. Please contact API key provider.</string>
+    <string name="error_invalid_search_query">Search query must be greater than 3 characters and contain only alphabet characters.</string>
+
+    <string name="search_button">Get Weather</string>
+
+    <string name="weather_info_date">Date: %1$s</string>
+    <string name="weather_info_temperature">Average temperature: %1$.01f\u00B0%2$s</string>
+    <string name="weather_info_pressure">Pressure: %1$d</string>
+    <string name="weather_info_humidity">Humidity: %1$d%%</string>
+    <string name="weather_info_description">Description: %1$s</string>
+
+    <string name="temperature_unit_default">Kelvin</string>
+    <string name="temperature_unit_metric">Celsius</string>
+    <string name="temperature_unit_imperial">Fahrenheit</string>
+
+    <string name="accessibility_weather_search_input">Please enter city name to get weather info.</string>
+    <string name="accessibility_weather_search_button">Search weather info of above city.</string>
+    <string name="accessibility_weather_info_list">Weather info list.</string>
+    <string name="accessibility_weather_item_date">Date: %1$s.</string>
+    <string name="accessibility_weather_item_temperature">Average temperature: %1$.01f %2$s degree.</string>
+    <string name="accessibility_weather_item_pressure">Pressure: %1$d.</string>
+    <string name="accessibility_weather_item_humidity">Humidity: %1$d percent</string>
+    <string name="accessibility_weather_item_description">Description: %1$s</string>
 </resources>

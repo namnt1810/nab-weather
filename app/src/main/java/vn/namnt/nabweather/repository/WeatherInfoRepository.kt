@@ -9,10 +9,12 @@ import vn.namnt.nabweather.entity.WeatherInfo
  * @since 05/12/2022
  */
 interface WeatherInfoRepository {
-    suspend fun getWeatherInfo(
+    fun getWeatherInfo(
         city: String,
         fromDate: Long,
         temperatureUnit: TemperatureUnit,
         requestTime: Long
     ): Flow<Result<List<WeatherInfo>>>
+
+    suspend fun cleanupWeatherInfo(): Int
 }

@@ -1,4 +1,4 @@
-package vn.namnt.nabweather.ui.main
+package vn.namnt.nabweather.presentation.main
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -14,13 +14,14 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import vn.namnt.nabweather.TestCoroutineRule
-import vn.namnt.nabweather.data.remote.MockData
+import vn.namnt.nabweather.data.MockData
+import vn.namnt.nabweather.data.remote.error.ApiErrorCodes
 import vn.namnt.nabweather.data.remote.error.NoInternetException
 import vn.namnt.nabweather.entity.WeatherInfo
 import vn.namnt.nabweather.repository.Result
 import vn.namnt.nabweather.repository.WeatherInfoRepository
-import vn.namnt.nabweather.repository.exception.DomainException
-import vn.namnt.nabweather.ui.main.WeatherInfoUiState.*
+import vn.namnt.nabweather.repository.exception.ApiException
+import vn.namnt.nabweather.presentation.main.WeatherInfoUiState.*
 
 /**
  * @author namnt
@@ -62,7 +63,7 @@ class MainViewModelTest {
         viewModel.getWeatherInfo("any")
         advanceUntilIdle()
 
-        assertEquals(Loading, uiStates[1])
+        assertEquals(Loading::class, uiStates[1]::class)
 
         job.cancel()
     }
@@ -95,18 +96,12 @@ class MainViewModelTest {
 
     @Test
     fun `emit search query error when search with invalid value`() = runTest {
-//        val uiStates = mutableListOf<WeatherInfoUiState>()
-//        val job = launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.toList(uiStates) }
-
-        viewModel.getWeatherInfo("s")
+        viewModel.getWeatherInfo("vn")
         advanceUntilIdle()
 
         val last = viewModel.uiState.value
 
-        assertEquals(Error::class, last::class)
-        assertEquals(IllegalArgumentException::class, (last as Error).exception::class)
-
-//        job.cancel()
+        assertEquals(Error.InvalidInput::class, last::class)
     }
 
     @Test
@@ -119,15 +114,15 @@ class MainViewModelTest {
         viewModel.getWeatherInfo("any")
         advanceUntilIdle()
 
-        assertEquals(Error::class, viewModel.uiState.value::class)
-        assertEquals(NoInternetException::class, (viewModel.uiState.value as Error).exception::class)
+        assertEquals(Error.WrappedException::class, viewModel.uiState.value::class)
+        assertEquals(NoInternetException::class, (viewModel.uiState.value as Error.WrappedException).exception::class)
     }
 
     @Test
     fun `emit 404 error`() = runTest {
         repository.stub {
             onBlocking { getWeatherInfo(any(), any(), any(), any()) }
-                .doReturn(flowOf(Result.Error(DomainException("404"))))
+                .doReturn(flowOf(Result.Error(ApiException(404))))
         }
 
         viewModel.getWeatherInfo("notfound")
@@ -135,9 +130,9 @@ class MainViewModelTest {
 
         val state = viewModel.uiState.value
 
-        assertEquals(Error::class, state::class)
-        assertEquals(DomainException::class, (state as Error).exception::class)
-        assertEquals("404", (state.exception as DomainException).code)
+        assertEquals(Error.WrappedException::class, state::class)
+        assertEquals(ApiException::class, (state as Error.WrappedException).exception::class)
+        assertEquals(ApiErrorCodes.NOT_FOUND, (state.exception as ApiException).code)
     }
 
     @After

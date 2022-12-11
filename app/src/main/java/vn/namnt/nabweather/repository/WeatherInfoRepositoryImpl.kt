@@ -8,17 +8,18 @@ import vn.namnt.nabweather.data.local.WeatherInfoLocalDatasource
 import vn.namnt.nabweather.data.local.database.entity.CityInfoDBO
 import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
 import vn.namnt.nabweather.data.remote.WeatherInfoRemoteDatasource
-import vn.namnt.nabweather.data.remote.model.isSuccess
+import vn.namnt.nabweather.data.remote.error.ApiErrorCodes
 import vn.namnt.nabweather.entity.WeatherInfo
-import vn.namnt.nabweather.repository.exception.DomainException
+import vn.namnt.nabweather.repository.exception.ApiException
+import javax.inject.Inject
 
 internal const val DEFAULT_TIME_COUNT = 7
 
-internal class WeatherInfoRepositoryImpl constructor(
+internal class WeatherInfoRepositoryImpl @Inject constructor(
     private val localDatasource: WeatherInfoLocalDatasource,
     private val remoteDatasource: WeatherInfoRemoteDatasource
 ) : WeatherInfoRepository {
-    override suspend fun getWeatherInfo(
+    override fun getWeatherInfo(
         city: String,
         fromDate: Long,
         temperatureUnit: TemperatureUnit,
@@ -34,8 +35,8 @@ internal class WeatherInfoRepositoryImpl constructor(
 
                     val cityInfoDBO = CityInfoDBO(
                         city,
-                        if (response.isSuccess) response.city.id else null,
-                        response.code,
+                        response.city.id,
+                        ApiErrorCodes.SUCCESS,
                         requestTime
                     )
 
@@ -43,28 +44,24 @@ internal class WeatherInfoRepositoryImpl constructor(
 
                     cityInfo = cityInfoDBO.copy()
 
-                    if (response.isSuccess) {
-                        val dboItems = response.list.map {
-                            WeatherInfoDBO(
-                                response.city.id,
-                                response.city.name,
-                                it.date,
-                                it.temperature.day.toDefaultTemperature(temperatureUnit),
-                                it.temperature.day.toMetricTemperature(temperatureUnit),
-                                it.temperature.day.toImperialTemperature(temperatureUnit),
-                                it.pressure,
-                                it.humidity,
-                                it.detail.firstOrNull()?.description ?: ""
-                            )
-                        }
-                        localDatasource.saveWeatherInfo(*dboItems.toTypedArray())
-                    } else {
-                        throw DomainException(response.code)
+                    val dboItems = response.list.map {
+                        WeatherInfoDBO(
+                            response.city.id,
+                            response.city.name,
+                            it.date * 1000,
+                            it.temperature.day.toDefaultTemperature(temperatureUnit),
+                            it.temperature.day.toMetricTemperature(temperatureUnit),
+                            it.temperature.day.toImperialTemperature(temperatureUnit),
+                            it.pressure,
+                            it.humidity,
+                            it.detail.firstOrNull()?.description ?: ""
+                        )
                     }
+                    localDatasource.saveWeatherInfo(*dboItems.toTypedArray())
                 }
 
                 if (cityInfo != null && !cityInfo.isActualRequestSuccess()) {
-                    emit(Result.Error(DomainException(cityInfo.errorCode)))
+                    emit(Result.Error(ApiException(cityInfo.errorCode)))
                 } else {
                     val weatherDboList = localDatasource.getWeatherInfo(
                         cityInfo!!.actualId!!,
@@ -88,9 +85,24 @@ internal class WeatherInfoRepositoryImpl constructor(
                     emit(Result.Success(infoList))
                 }
             } catch (e: Exception) {
+                if (e is ApiException) {
+                    val cityInfoDBO = CityInfoDBO(
+                        city,
+                        null,
+                        e.code,
+                        requestTime
+                    )
+
+                    localDatasource.saveCityInfo(cityInfoDBO)
+                }
+
                 emit(Result.Error(e))
             }
         }
+    }
+
+    override suspend fun cleanupWeatherInfo(): Int {
+        return localDatasource.deleteObsoleteData()
     }
 }
 
@@ -103,27 +115,27 @@ internal fun CityInfoDBO?.needFetchRemoteInfo(timeToCompare: Long): Boolean {
     return timeToCompare - lastModified > 10 * 60 * 1000
 }
 
-internal fun CityInfoDBO.isActualRequestSuccess(): Boolean = errorCode == "200"
+internal fun CityInfoDBO.isActualRequestSuccess(): Boolean = errorCode == ApiErrorCodes.SUCCESS
 
-internal fun kelvinToCelcius(tempInK: Float) = tempInK - 273.15f
-internal fun celciusToKelvin(tempInC: Float) = tempInC + 273.15f
-internal fun celciusToFahrenheit(tempInC: Float) = tempInC * 9 / 5 + 32
-internal fun fahrenheitToCelcius(tempInF: Float) = (tempInF - 32) * 5 / 9
+internal fun kelvinToCelsius(tempInK: Float) = tempInK - 273.15f
+internal fun celsiusToKelvin(tempInC: Float) = tempInC + 273.15f
+internal fun celsiusToFahrenheit(tempInC: Float) = tempInC * 9 / 5 + 32
+internal fun fahrenheitToCelsius(tempInF: Float) = (tempInF - 32) * 5 / 9
 
 internal fun Float.toDefaultTemperature(fromUnit: TemperatureUnit): Float = when (fromUnit) {
     DEFAULT -> this
-    METRIC -> celciusToKelvin(this)
-    IMPERIAL -> celciusToKelvin(fahrenheitToCelcius(this))
+    METRIC -> celsiusToKelvin(this)
+    IMPERIAL -> celsiusToKelvin(fahrenheitToCelsius(this))
 }
 
 internal fun Float.toMetricTemperature(fromUnit: TemperatureUnit): Float = when (fromUnit) {
-    DEFAULT -> kelvinToCelcius(this)
+    DEFAULT -> kelvinToCelsius(this)
     METRIC -> this
-    IMPERIAL -> fahrenheitToCelcius(this)
+    IMPERIAL -> fahrenheitToCelsius(this)
 }
 
 internal fun Float.toImperialTemperature(fromUnit: TemperatureUnit): Float = when (fromUnit) {
-    DEFAULT -> celciusToFahrenheit(kelvinToCelcius(this))
-    METRIC -> celciusToFahrenheit(this)
+    DEFAULT -> celsiusToFahrenheit(kelvinToCelsius(this))
+    METRIC -> celsiusToFahrenheit(this)
     IMPERIAL -> this
 }

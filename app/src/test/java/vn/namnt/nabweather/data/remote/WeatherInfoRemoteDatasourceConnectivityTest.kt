@@ -5,12 +5,14 @@ import android.net.ConnectivityManager
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -19,6 +21,7 @@ import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import vn.namnt.nabweather.TestCoroutineRule
 import vn.namnt.nabweather.common.TemperatureUnit
 import vn.namnt.nabweather.data.remote.error.NoConnectivityException
 import vn.namnt.nabweather.data.remote.interceptors.NoConnectionInterceptor
@@ -36,6 +39,11 @@ import java.util.concurrent.TimeUnit
 )
 @RunWith(RobolectricTestRunner::class)
 class WeatherInfoRemoteDatasourceConnectivityTest {
+    @get:Rule
+    var testRule = TestCoroutineRule()
+
+    private val coroutineDispatcher = UnconfinedTestDispatcher()
+
     private val gson = GsonBuilder().create()
     private val mockWebServer = MockWebServer()
     private lateinit var datasource: WeatherInfoRemoteDatasource
@@ -53,7 +61,7 @@ class WeatherInfoRemoteDatasourceConnectivityTest {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-        datasource = WeatherInfoRemoteDatasourceImpl(retrofit)
+        datasource = WeatherInfoRemoteDatasourceImpl(retrofit, coroutineDispatcher)
     }
 
     @Test(expected = NoConnectivityException::class)
