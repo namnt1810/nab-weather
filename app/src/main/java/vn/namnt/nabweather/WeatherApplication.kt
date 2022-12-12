@@ -7,10 +7,10 @@ import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import vn.namnt.nabweather.common.DaggerCommonComponent
 import vn.namnt.nabweather.data.DaggerDataComponent
+import vn.namnt.nabweather.domain.DaggerDomainComponent
 import vn.namnt.nabweather.presentation.DaggerAppComponent
-import vn.namnt.nabweather.presentation.utils.AppWorkerFactory
 import vn.namnt.nabweather.presentation.internal.worker.WeatherInfoCleanupWorker
-import vn.namnt.nabweather.repository.DaggerDomainComponent
+import vn.namnt.nabweather.presentation.utils.AppWorkerFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

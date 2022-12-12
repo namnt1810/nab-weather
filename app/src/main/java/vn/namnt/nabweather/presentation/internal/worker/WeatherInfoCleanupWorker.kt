@@ -7,8 +7,8 @@ import androidx.work.Data
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import vn.namnt.nabweather.BuildConfig
+import vn.namnt.nabweather.domain.WeatherInfoRepository
 import vn.namnt.nabweather.presentation.utils.AbstractWorkerFactory
-import vn.namnt.nabweather.repository.WeatherInfoRepository
 import javax.inject.Inject
 
 /**

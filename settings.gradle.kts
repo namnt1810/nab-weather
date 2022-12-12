@@ -2,3 +2,8 @@ include(
     "depconstraints",
     ":app",
 )
+include(":domain")
+include(":common")
+include(":data")
+include(":entity")
+include(":testcommon")

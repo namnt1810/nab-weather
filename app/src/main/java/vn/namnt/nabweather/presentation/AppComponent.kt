@@ -7,12 +7,8 @@ import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import vn.namnt.nabweather.WeatherApplication
 import vn.namnt.nabweather.common.CommonComponent
-import vn.namnt.nabweather.di.AppScoped
-import vn.namnt.nabweather.presentation.internal.di.ActivityBindingModule
-import vn.namnt.nabweather.presentation.internal.di.CoroutineDispatcherModule
-import vn.namnt.nabweather.presentation.internal.di.ViewModelModule
-import vn.namnt.nabweather.presentation.internal.di.WorkerBindingModule
-import vn.namnt.nabweather.repository.DomainComponent
+import vn.namnt.nabweather.domain.DomainComponent
+import vn.namnt.nabweather.presentation.internal.di.*
 
 /**
  * @author namnt

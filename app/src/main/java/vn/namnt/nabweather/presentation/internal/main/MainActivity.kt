@@ -16,7 +16,6 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
 import vn.namnt.nabweather.R
 import vn.namnt.nabweather.databinding.ActivityMainBinding
-import vn.namnt.nabweather.entity.WeatherInfo
 import vn.namnt.nabweather.presentation.utils.ErrorResolver
 import vn.namnt.nabweather.presentation.utils.ViewModelFactory
 import javax.inject.Inject
@@ -25,7 +24,7 @@ import javax.inject.Inject
  * @author namnt
  * @since 01/12/2022
  */
-class MainActivity: DaggerAppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity() {
     @Inject
     internal lateinit var errorResolver: ErrorResolver
 
@@ -106,7 +105,7 @@ class MainActivity: DaggerAppCompatActivity() {
         binding.progressBar.show()
     }
 
-    private fun handleDataState(infoList: List<WeatherInfo>) {
+    private fun handleDataState(infoList: List<vn.namnt.nabweather.entity.WeatherInfo>) {
         binding.searchButton.isEnabled = true
         binding.weatherInfoList.isEnabled = true
         binding.progressBar.hide()
@@ -123,7 +122,9 @@ class MainActivity: DaggerAppCompatActivity() {
 
         val message = when (error) {
             is WeatherInfoUiState.Error.InvalidInput -> getString(R.string.error_invalid_search_query)
-            is WeatherInfoUiState.Error.WrappedException -> errorResolver.localizedErrorMessage(error.exception)
+            is WeatherInfoUiState.Error.WrappedException -> errorResolver.localizedErrorMessage(
+                error.exception
+            )
         }
         snackbar = Snackbar.make(binding.coordinator, message, LENGTH_LONG).also {
             it.show()

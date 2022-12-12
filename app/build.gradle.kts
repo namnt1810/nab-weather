@@ -1,6 +1,6 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import java.util.*
 import java.io.FileInputStream
+import java.util.*
 
 plugins {
     id("com.android.application")
@@ -10,6 +10,7 @@ plugins {
 }
 
 android {
+    namespace = "vn.namnt.nabweather"
     compileSdk = Configs.COMPILE_SDK
 
     defaultConfig {
@@ -37,8 +38,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-
-    namespace = "vn.namnt.nabweather"
 
     signingConfigs {
         getByName("debug") {
@@ -128,11 +127,15 @@ android {
 dependencies {
     api(platform(project(":depconstraints")))
     kapt(platform(project(":depconstraints"))) // Dagger does not support KSP yet
-//    ksp(platform(project(":depconstraints")))
     testApi(platform(project(":depconstraints")))
     androidTestApi(platform(project(":depconstraints")))
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
+    implementation(project(":common"))
+    implementation(project(":entity"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
 
     // Java
     implementation(Libs.JAVA_ANNOTATION)
@@ -153,11 +156,6 @@ dependencies {
     implementation(Libs.LIFECYCLE_RUNTIME)
     implementation(Libs.VIEW_MODEL_KTX)
 
-    implementation(Libs.ROOM)
-    implementation(Libs.ROOM_KTX)
-    kapt(Libs.ROOM_COMPILER)
-//    ksp(Libs.ROOM_COMPILER)
-
     implementation(Libs.WORK_MANAGER)
 
     // 3rd-party
@@ -167,31 +165,7 @@ dependencies {
     kapt(Libs.DAGGER_COMPILER)
     kapt(Libs.DAGGER_PROCESSOR)
 
-    // Gson
-    implementation(Libs.GSON)
-
-    // Retrofit
-    implementation(Libs.RETROFIT)
-    implementation(Libs.RETROFIT_GSON_CONVERTER)
-
-    // Logging interceptor
-    implementation(Libs.OKHTTP_LOGGING_INTERCEPTOR)
-
 //    debugImplementation(Libs.LEAK_CANARY)
 
-    // Instrumentation tests
-    androidTestImplementation(Libs.COROUTINE_TEST)
-    androidTestImplementation(Libs.ESPRESSO_CORE)
-    androidTestImplementation(Libs.ANDROID_RUNNER)
-    androidTestImplementation(Libs.ANDROID_RUNNER_EXT)
-    androidTestImplementation(Libs.MOCK_WEB_SERVER)
-
-    // Local unit tests
-    testImplementation(Libs.COROUTINE_TEST)
-    testImplementation(Libs.JUNIT)
-    testImplementation(Libs.ROBOELECTRIC)
-    testImplementation(Libs.MOCKITO_CORE)
-    testImplementation(Libs.MOCKITO_KOTLIN)
-    testImplementation(Libs.MOCKITO_INLINE)
-    testImplementation(Libs.MOCK_WEB_SERVER)
+    testImplementation(project(":testcommon"))
 }

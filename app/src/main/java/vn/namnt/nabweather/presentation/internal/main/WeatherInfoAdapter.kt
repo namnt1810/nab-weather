@@ -5,9 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import vn.namnt.nabweather.R
-import vn.namnt.nabweather.common.TemperatureUnit
 import vn.namnt.nabweather.databinding.ItemWeatherInfoBinding
-import vn.namnt.nabweather.entity.WeatherInfo
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -21,7 +19,7 @@ import java.time.format.DateTimeFormatter
 private val dateFormat = DateTimeFormatter.ofPattern("EEE, dd MMM uuuu")
 
 class WeatherInfoAdapter : RecyclerView.Adapter<WeatherInfoAdapter.WeatherInfoVH>() {
-    private val infoList = mutableListOf<WeatherInfo>()
+    private val infoList = mutableListOf<vn.namnt.nabweather.entity.WeatherInfo>()
 
     override fun getItemCount(): Int = infoList.size
 
@@ -35,7 +33,7 @@ class WeatherInfoAdapter : RecyclerView.Adapter<WeatherInfoAdapter.WeatherInfoVH
         holder.bindData(infoList[position])
     }
 
-    fun setData(list: List<WeatherInfo>) {
+    fun setData(list: List<vn.namnt.nabweather.entity.WeatherInfo>) {
         infoList.clear()
 
         infoList.addAll(list)
@@ -47,7 +45,7 @@ class WeatherInfoAdapter : RecyclerView.Adapter<WeatherInfoAdapter.WeatherInfoVH
         private val binding: ItemWeatherInfoBinding
     ) : ViewHolder(binding.root) {
 
-        fun bindData(info: WeatherInfo) {
+        fun bindData(info: vn.namnt.nabweather.entity.WeatherInfo) {
             val context = binding.root.context
 
             binding.apply {
@@ -83,9 +81,9 @@ class WeatherInfoAdapter : RecyclerView.Adapter<WeatherInfoAdapter.WeatherInfoVH
     }
 }
 
-private val WeatherInfo.temperatureSymbol: String
+private val vn.namnt.nabweather.entity.WeatherInfo.temperatureSymbol: String
     get() = when (tempUnit) {
-        TemperatureUnit.DEFAULT -> "K"
-        TemperatureUnit.METRIC -> "C"
-        TemperatureUnit.IMPERIAL -> "F"
+        vn.namnt.nabweather.common.TemperatureUnit.DEFAULT -> "K"
+        vn.namnt.nabweather.common.TemperatureUnit.METRIC -> "C"
+        vn.namnt.nabweather.common.TemperatureUnit.IMPERIAL -> "F"
     }
