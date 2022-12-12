@@ -3,11 +3,11 @@ package vn.namnt.nabweather.presentation.utils
 import android.content.Context
 import retrofit2.HttpException
 import vn.namnt.nabweather.R
-import vn.namnt.nabweather.data.remote.error.ApiErrorCodes
-import vn.namnt.nabweather.data.remote.error.NoConnectivityException
-import vn.namnt.nabweather.data.remote.error.NoInternetException
+import vn.namnt.nabweather.data.ApiErrorCodes
+import vn.namnt.nabweather.data.ApiException
+import vn.namnt.nabweather.data.NoConnectivityException
+import vn.namnt.nabweather.data.NoInternetException
 import vn.namnt.nabweather.di.AppContext
-import vn.namnt.nabweather.repository.exception.ApiException
 import javax.inject.Inject
 
 /**

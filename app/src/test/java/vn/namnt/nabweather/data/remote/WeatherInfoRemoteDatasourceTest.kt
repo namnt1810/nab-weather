@@ -15,10 +15,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import vn.namnt.nabweather.TestCoroutineRule
 import vn.namnt.nabweather.common.TemperatureUnit.*
 import vn.namnt.nabweather.data.MockData
-import vn.namnt.nabweather.data.remote.error.ApiErrorCodes
-import vn.namnt.nabweather.data.remote.interceptors.RequestInterceptor
-import vn.namnt.nabweather.data.remote.model.WeatherInfoResponse
-import vn.namnt.nabweather.repository.exception.ApiException
+import vn.namnt.nabweather.data.WeatherInfoRemoteDatasource
+import vn.namnt.nabweather.data.ApiErrorCodes
+import vn.namnt.nabweather.data.internal.remote.interceptors.RequestInterceptor
+import vn.namnt.nabweather.data.internal.remote.model.WeatherInfoResponse
+import vn.namnt.nabweather.data.ApiException
+import vn.namnt.nabweather.data.internal.remote.WeatherInfoRemoteDatasourceImpl
+import vn.namnt.nabweather.data.internal.remote.toRemoteWeatherData
 
 /**
  * @author namnt
@@ -56,7 +59,7 @@ class WeatherInfoRemoteDatasourceTest {
 
     @Test
     fun appIdIsCorrectTest() = runTest {
-        mockWebServer.enqueue(MockResponse().setBody("{}"))
+        mockWebServer.enqueue(MockResponse().setBody(MockData.remoteResponseJson))
 
         datasource.getWeatherInfo("any", 1, DEFAULT)
 
@@ -73,7 +76,7 @@ class WeatherInfoRemoteDatasourceTest {
         )
 
         val actual = datasource.getWeatherInfo("saigon", 7, METRIC)
-        val expected = gson.fromJson(MockData.remoteResponseJson, WeatherInfoResponse::class.java)
+        val expected = gson.fromJson(MockData.remoteResponseJson, WeatherInfoResponse::class.java).toRemoteWeatherData()
 
         assert(actual.city.id == expected.city.id)
 
@@ -138,6 +141,17 @@ class WeatherInfoRemoteDatasourceTest {
                 .setBody(
                     """
                 {
+                    "city": {
+                        "id": 1580578,
+                        "name": "Ho Chi Minh City",
+                        "coord": {
+                            "lon": 106.6667,
+                            "lat": 10.8333
+                        },
+                        "country": "VN",
+                        "population": 0,
+                        "timezone": 25200
+                    },
                     "cod": "200",
                     "list": []
                 }

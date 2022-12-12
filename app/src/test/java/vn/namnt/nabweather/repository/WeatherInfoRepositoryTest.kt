@@ -12,14 +12,9 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import vn.namnt.nabweather.common.TemperatureUnit.*
-import vn.namnt.nabweather.data.MockData
-import vn.namnt.nabweather.data.local.WeatherInfoLocalDatasource
-import vn.namnt.nabweather.data.local.database.entity.CityInfoDBO
-import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
-import vn.namnt.nabweather.data.remote.WeatherInfoRemoteDatasource
-import vn.namnt.nabweather.data.remote.error.NoConnectivityException
-import vn.namnt.nabweather.data.remote.error.NoInternetException
-import vn.namnt.nabweather.data.remote.model.WeatherInfoResponse
+import vn.namnt.nabweather.data.*
+import vn.namnt.nabweather.data.internal.remote.model.WeatherInfoResponse
+import vn.namnt.nabweather.data.internal.remote.toRemoteWeatherData
 import vn.namnt.nabweather.entity.WeatherInfo
 import java.util.*
 
@@ -53,9 +48,9 @@ class WeatherInfoRepositoryTest {
         repository = WeatherInfoRepositoryImpl(localDatasource, remoteDatasource)
 
         val remoteExpected =
-            gson.fromJson(MockData.remoteResponseJson, WeatherInfoResponse::class.java)
+            gson.fromJson(MockData.remoteResponseJson, WeatherInfoResponse::class.java).toRemoteWeatherData()
         val localExpected = remoteExpected.list.map {
-            WeatherInfoDBO(
+            WeatherInfoData(
                 remoteExpected.city.id,
                 remoteExpected.city.name,
                 it.date,
@@ -123,7 +118,7 @@ class WeatherInfoRepositoryTest {
         localDatasource.stub {
             onBlocking {
                 getCityInfo("saigon")
-            }.doReturn(CityInfoDBO("saigon", 1580578, 200, lastModified))
+            }.doReturn(CityInfoData("saigon", 1580578, 200, lastModified))
         }
         localDatasource.stub {
             onBlocking {

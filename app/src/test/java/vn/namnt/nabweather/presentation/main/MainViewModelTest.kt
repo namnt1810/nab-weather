@@ -14,14 +14,16 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 import vn.namnt.nabweather.TestCoroutineRule
+import vn.namnt.nabweather.data.ApiErrorCodes
+import vn.namnt.nabweather.data.ApiException
 import vn.namnt.nabweather.data.MockData
-import vn.namnt.nabweather.data.remote.error.ApiErrorCodes
-import vn.namnt.nabweather.data.remote.error.NoInternetException
+import vn.namnt.nabweather.data.NoInternetException
 import vn.namnt.nabweather.entity.WeatherInfo
+import vn.namnt.nabweather.presentation.internal.main.MainViewModel
+import vn.namnt.nabweather.presentation.internal.main.WeatherInfoUiState
+import vn.namnt.nabweather.presentation.internal.main.WeatherInfoUiState.*
 import vn.namnt.nabweather.repository.Result
 import vn.namnt.nabweather.repository.WeatherInfoRepository
-import vn.namnt.nabweather.repository.exception.ApiException
-import vn.namnt.nabweather.presentation.main.WeatherInfoUiState.*
 
 /**
  * @author namnt

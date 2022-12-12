@@ -1,4 +1,6 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import java.util.*
+import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
@@ -39,12 +41,40 @@ android {
     namespace = "vn.namnt.nabweather"
 
     signingConfigs {
-        create("release")
+        getByName("debug") {
+            val fis = FileInputStream(rootProject.file("signing/keystoreDebug.properties"))
+            val properties = Properties()
+            properties.load(fis)
+
+            storeFile = file(properties.getProperty("KEY_STORE"))
+            storePassword = properties.getProperty("KEY_STORE_PASSWORD")
+            keyAlias = properties.getProperty("KEY_STORE_ALIAS")
+            keyPassword = properties.getProperty("KEY_STORE_ALIAS_PASSWORD")
+        }
+
+        create("release") {
+            // By default, the release keystore will not add to source control. In case testing
+            // release build on local, we will fallback to using the debug keystore instead
+            var configFile = rootProject.file("signing/keystoreRelease.properties")
+            if (!configFile.exists()) {
+                configFile = project.rootProject.file("signing/keystoreDebug.properties")
+            }
+
+            val fis = FileInputStream(configFile)
+            val properties = Properties()
+            properties.load(fis)
+
+            storeFile = file(properties.getProperty("KEY_STORE"))
+            storePassword = properties.getProperty("KEY_STORE_PASSWORD")
+            keyAlias = properties.getProperty("KEY_STORE_ALIAS")
+            keyPassword = properties.getProperty("KEY_STORE_ALIAS_PASSWORD")
+        }
     }
 
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -71,12 +101,8 @@ android {
 //                }
             }
         }
+
         getByName("debug") {
-//            isMinifyEnabled = true
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimize.txt"),
-//                "proguard-rules.pro"
-//            )
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -149,7 +175,7 @@ dependencies {
     implementation(Libs.RETROFIT_GSON_CONVERTER)
 
     // Logging interceptor
-    debugImplementation(Libs.OKHTTP_LOGGING_INTERCEPTOR)
+    implementation(Libs.OKHTTP_LOGGING_INTERCEPTOR)
 
 //    debugImplementation(Libs.LEAK_CANARY)
 

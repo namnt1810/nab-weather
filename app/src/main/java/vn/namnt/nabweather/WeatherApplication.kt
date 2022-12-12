@@ -5,12 +5,12 @@ import androidx.multidex.MultiDex
 import androidx.work.*
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
-import vn.namnt.nabweather.common.di.DaggerCommonComponent
-import vn.namnt.nabweather.data.di.DaggerDataComponent
-import vn.namnt.nabweather.presentation.di.DaggerAppComponent
+import vn.namnt.nabweather.common.DaggerCommonComponent
+import vn.namnt.nabweather.data.DaggerDataComponent
+import vn.namnt.nabweather.presentation.DaggerAppComponent
 import vn.namnt.nabweather.presentation.utils.AppWorkerFactory
-import vn.namnt.nabweather.presentation.worker.WeatherInfoCleanupWorker
-import vn.namnt.nabweather.repository.di.DaggerDomainComponent
+import vn.namnt.nabweather.presentation.internal.worker.WeatherInfoCleanupWorker
+import vn.namnt.nabweather.repository.DaggerDomainComponent
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

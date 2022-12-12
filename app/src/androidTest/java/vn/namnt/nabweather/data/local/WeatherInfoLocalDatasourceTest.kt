@@ -12,9 +12,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import vn.namnt.nabweather.common.TemperatureUnit
-import vn.namnt.nabweather.data.local.database.WeatherDatabase
-import vn.namnt.nabweather.data.local.database.entity.CityInfoDBO
-import vn.namnt.nabweather.data.local.database.entity.WeatherInfoDBO
+import vn.namnt.nabweather.data.WeatherInfoLocalDatasource
+import vn.namnt.nabweather.data.internal.local.database.WeatherDatabase
+import vn.namnt.nabweather.data.CityInfoData
+import vn.namnt.nabweather.data.WeatherInfoData
+import vn.namnt.nabweather.data.internal.local.WeatherInfoLocalDatasourceImpl
 import vn.namnt.nabweather.repository.toDefaultTemperature
 import java.io.IOException
 
@@ -40,7 +42,7 @@ class WeatherInfoLocalDatasourceTest {
     fun getSetCityInfoTest() = runTest {
         val time = System.currentTimeMillis()
 
-        val cityInfo = CityInfoDBO(
+        val cityInfo = CityInfoData(
             "saigon",
             actualId = 1,
             200,
@@ -61,7 +63,7 @@ class WeatherInfoLocalDatasourceTest {
     fun replaceCityInfoTest() = runTest {
         val time = System.currentTimeMillis()
 
-        val before = CityInfoDBO(
+        val before = CityInfoData(
             "saigon",
             actualId = 1,
             200,
@@ -72,7 +74,7 @@ class WeatherInfoLocalDatasourceTest {
 
         val timeAfter = time + 10 * 60 * 1000 // 10 minutes
 
-        val after = CityInfoDBO(
+        val after = CityInfoData(
             "saigon",
             actualId = 1,
             200,
@@ -88,7 +90,7 @@ class WeatherInfoLocalDatasourceTest {
     fun weatherInfoTest() = runTest {
         val time = System.currentTimeMillis()
 
-        val dbo = WeatherInfoDBO(
+        val dbo = WeatherInfoData(
             1,
             "saigon",
             time,
@@ -102,14 +104,16 @@ class WeatherInfoLocalDatasourceTest {
 
         datasource.saveWeatherInfo(dbo)
 
-        assert(datasource.getWeatherInfo(1, time, 1)[0] == dbo)
+        val actual = datasource.getWeatherInfo(1, time, 1)[0]
+
+        Assert.assertEquals(dbo, actual)
     }
 
     @Test
     fun replaceWeatherInfoTest() = runTest {
         val time = System.currentTimeMillis()
 
-        val previous = WeatherInfoDBO(
+        val previous = WeatherInfoData(
             1,
             "saigon",
             time,
@@ -123,7 +127,7 @@ class WeatherInfoLocalDatasourceTest {
 
         datasource.saveWeatherInfo(previous)
 
-        val after = WeatherInfoDBO(
+        val after = WeatherInfoData(
             1,
             "saigon",
             time,
@@ -137,27 +141,29 @@ class WeatherInfoLocalDatasourceTest {
 
         datasource.saveWeatherInfo(after)
 
-        assert(datasource.getWeatherInfo(1, time, 1)[0] != previous)
-        assert(datasource.getWeatherInfo(1, time, 1)[0] == after)
+        val actual = datasource.getWeatherInfo(1, time, 1)[0]
+
+        Assert.assertNotEquals(previous, actual)
+        Assert.assertEquals(after, actual)
     }
 
     @Test
     fun deleteObsoleteDataTest() = runTest {
         val now = System.currentTimeMillis()
 
-        val oldCity = CityInfoDBO("saigon", 1, 200, now - 20 * 60 * 1000)
+        val oldCity = CityInfoData("saigon", 1, 200, now - 20 * 60 * 1000)
         datasource.saveCityInfo(oldCity)
         advanceUntilIdle()
 
-        val oldCityWeather = WeatherInfoDBO(oldCity.actualId!!, "Ho Chi Minh", oldCity.lastModified, 0f, 0f, 0f, 0, 0)
+        val oldCityWeather = WeatherInfoData(oldCity.actualId!!, "Ho Chi Minh", oldCity.lastModified, 0f, 0f, 0f, 0, 0)
         datasource.saveWeatherInfo(oldCityWeather)
         advanceUntilIdle()
 
-        val newCity = CityInfoDBO("hanoi", 2, 200, now)
+        val newCity = CityInfoData("hanoi", 2, 200, now)
         datasource.saveCityInfo(newCity)
         advanceUntilIdle()
 
-        val newCityWeather = WeatherInfoDBO(newCity.actualId!!, "Ha Noi", newCity.lastModified, 0f, 0f, 0f, 0, 0)
+        val newCityWeather = WeatherInfoData(newCity.actualId!!, "Ha Noi", newCity.lastModified, 0f, 0f, 0f, 0, 0)
         datasource.saveWeatherInfo(newCityWeather)
         advanceUntilIdle()
 

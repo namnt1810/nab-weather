@@ -23,8 +23,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import vn.namnt.nabweather.TestCoroutineRule
 import vn.namnt.nabweather.common.TemperatureUnit
-import vn.namnt.nabweather.data.remote.error.NoConnectivityException
-import vn.namnt.nabweather.data.remote.interceptors.NoConnectionInterceptor
+import vn.namnt.nabweather.data.WeatherInfoRemoteDatasource
+import vn.namnt.nabweather.data.NoConnectivityException
+import vn.namnt.nabweather.data.internal.remote.WeatherInfoRemoteDatasourceImpl
+import vn.namnt.nabweather.data.internal.remote.interceptors.NoConnectionInterceptor
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
