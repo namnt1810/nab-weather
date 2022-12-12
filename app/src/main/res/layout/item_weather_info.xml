@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/weatherDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/weather_info_date"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/weatherTemperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/weather_info_spacing"
+        tools:text="@string/weather_info_temperature"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/weatherPressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/weather_info_spacing"
+        tools:text="@string/weather_info_pressure"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/weatherHumidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/weather_info_spacing"
+        tools:text="@string/weather_info_humidity"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/weatherDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/weather_info_spacing"
+        android:layout_marginTop="@dimen/weather_info_spacing"
+        tools:text="@string/weather_info_description"
+        />
+</androidx.appcompat.widget.LinearLayoutCompat>
