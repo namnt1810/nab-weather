@@ -27,10 +27,8 @@ Modules dependency graph:
   - `domain`: physical representation of **Domain** layer.  
   - `data`: physical representation of **Data** layer.  
   - `app`: Android app entrypoint and physical representation of **Presentation** layer.  
-  
-The reason why module `app` has dependency on `domain`, `data` and `common` is module `app` need to construct dependency graph using [Dagger2](https://github.com/google/dagger).  
 
-## Principles, best practices applied in this app
+## Principles, best practices and libraries applied in this app
 
 Single source of truth.
 
@@ -45,6 +43,13 @@ SOLID (Single responsibility, Open-closed, Liskov substitution, Interface segreg
 DRY (Don't Repeat Yourself).  
 
 Design patterns: Singleton, Factory, Builder, etc.  
+
+Libraries:  
+  - Kotlin coroutine.  
+  - Android View Widgets: ConstraintLayout, CoordinatorLayout, Snackbar, Material widgets.  
+  - Android Architecture components: Lifecycle (`ViewModel`), Room, WorkManager.  
+  - Third parties: Retrofit & OkHttpClient, Gson, Dagger.  
+  - Testing: JUnit, Robolectric, Mockito, MockWebServer.  
 
 ## Requirement checklist  
 
